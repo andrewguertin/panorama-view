@@ -11,9 +11,6 @@ var config = {
 
 var openingView = false;
 
-/** The currently open tab, which needs to be remembered when the Panorama View tab is opened */
-var currentTab;
-
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
 async function toggleView() {
 
@@ -24,11 +21,9 @@ async function toggleView() {
 
 	if(tabs.map(tab => tab.id).includes(activeTab.id)) {
 		// Panorama View is open, return to the current tab if possible
-		if (currentTab !== undefined) {
-			browser.tabs.update(currentTab.id, {active: true});
-		}
+		browser.tabs.update(await browser.sessions.getWindowValue(activeTab.windowId, 'activeTab'), {active: true});
 	}else{
-		currentTab = activeTab;
+		browser.sessions.setWindowValue(activeTab.windowId, 'activeTab', activeTab.id);
 
 		if(tabs.length > 0) {
 			// There's a background tab for Panorama View open, switch to it
