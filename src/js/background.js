@@ -12,12 +12,10 @@ var config = {
 var openingView = false;
 
 /** Open the Panorama View tab, or return to the last open tab if Panorama View is currently open */
-async function toggleView() {
+async function toggleView(activeTab) {
 
 	// Check if it's already open (possibly in a hidden tab)
 	var tabs = await browser.tabs.query({url: browser.extension.getURL("view.html"), currentWindow: true});
-
-	var activeTab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
 
 	if(tabs.map(tab => tab.id).includes(activeTab.id)) {
 		// Panorama View is open, return to the current tab if possible
